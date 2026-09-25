@@ -49,14 +49,18 @@ export type EventType =
   | 'di_bar_quay';   // Party / Sự kiện sôi động (Tối kỵ áo lễ)[cite: 1]
 
 export type WeatherType = 
-  | 'nang_nong'      // Mùa hè (Ưu tiên đũi, lụa mỏng, tay chẽn)[cite: 1]
-  | 'se_lanh'        // Mùa thu đông (Ưu tiên nhiều lớp, áo tấc)[cite: 1]
-  | 'mua_xuan';      // Tiết trời mát mẻ đầu năm[cite: 1]
+  | 'nang_gat'        // Nắng nóng gay gắt / Mùa hè oi bức
+  | 'nang_diu'        // Nắng dịu / Mùa thu khô mát
+  | 'se_lanh'         // Heo may se lạnh chớm đông
+  | 'ret_buot'        // Đông lạnh giá / Gió rét buốt
+  | 'mua_phun_xuan'   // Mưa phùn mùa xuân / Du xuân trẩy hội
+  | 'mua_nom_am';     // Mưa rào / Nồm ẩm trơn trượt
 
 export interface ContextState {
-  eventId: EventType; //[cite: 1]
-  weatherId: WeatherType; //[cite: 1]
-  formalityLevel: 'formal' | 'casual' | 'party'; //[cite: 1]
+  eventId: EventType;[cite: 1]
+  weatherId: WeatherType; // Nhận 1 trong 6 mã ID trên
+  formalityLevel: 'formal' | 'casual' | 'party';[cite: 1]
+  temperatureCategory: 'hot' | 'mild' | 'cold' | 'wet';
 }
 
 // ==========================================
@@ -76,8 +80,8 @@ export interface CatalogItem {
   id: string;               // VD: 'quan_lua_trang', 'ngoc_boi_cung_dinh'[cite: 1]
   name: string;             // Tên hiển thị giao diện[cite: 1]
   category: LayerCategory;  // Nhóm layer[cite: 1]
-  era: 'ly' | 'le' | 'nguyen' | 'modern'; // Niên đại lịch sử[cite: 1]
-  styleCategory: 'traditional' | 'streetwear' | 'royal'; // Phong cách thiết kế[cite: 1]
+  era: string; // Niên đại lịch sử[cite: 1]
+  styleCategory: string ;  // Phong cách thiết kế[cite: 1]
   assetUrl: string;         // Đường dẫn ảnh PNG chuẩn 600x800px[cite: 1]
   thumbnailUrl: string;     // Ảnh thumbnail vuông hiển thị trên thanh chọn đồ[cite: 1]
   isRoyalOnly?: boolean;    // Cờ độc quyền hoàng gia (VD: Rồng 5 móng)[cite: 1]
@@ -92,10 +96,12 @@ export interface ActiveOutfitState {
   
   // Áo chính (Thân trên)
   garment: {
-    type: 'ngu_than' | 'ao_dai' | 'tu_than' | 'nhat_binh'; //[cite: 1]
-    sleeve: 'tay_chen' | 'tay_thung'; // Tay chẽn (thường phục) / Tay thụng (lễ phục)[cite: 1]
+    type: string ; //[cite: 1]
+    sleeve: string | null ; // Tay chẽn (thường phục) / Tay thụng (lễ phục)[cite: 1]
+    materialId: 'lua' | 'gam' | 'dui' | 'sa_voan';
     colorId: string; // Mã màu hex hoặc định danh màu[cite: 1]
     isFlapReversed: boolean; // false = Vạt Tả đè Hữu (Chuẩn) | true = Vạt Hữu đè Tả (Lỗi Đỏ 🔴)[cite: 1]
+    innerGarmentId: string | null;
   };
 
   // Quần / Thường (Thân dưới - Bắt buộc chọn)
@@ -103,7 +109,7 @@ export interface ActiveOutfitState {
     id: string;      // ID từ catalog (VD: 'quan_lua_trang', 'quan_au_suong')[cite: 1]
     colorId: string; //[cite: 1]
   };
-
+    
   // Phụ kiện đính kèm (null nếu không mang)
   accessories: {
     head: string | null;          // ID mũ/kính[cite: 1]
@@ -177,7 +183,7 @@ export interface CulturalAlert {
 
 export interface RuleEngineResult {
   score: number;                 // Cultural Balance Score (0 - 100)[cite: 1]
-  rankTitle: string;             // Danh hiệu (VD: 'Bậc Thầy Remix ✨')[cite: 1]
+  rankTitle: string;             // Danh hiệu (VD: 'Bậc Thầy Remix')[cite: 1]
   canSaveLookbook: boolean;      // false nếu dính bất kỳ cờ RED nào[cite: 1]
   highestAlertLevel: AlertLevel; // Màu đèn chính cần hiển thị[cite: 1]
   alerts: CulturalAlert[];       // Danh sách các thông báo đang kích hoạt[cite: 1]
